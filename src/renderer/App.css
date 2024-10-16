@@ -7,10 +7,10 @@ body {
   color: white;
   height: 100vh;
   background: linear-gradient(
-    200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
+    -90deg,
+    #1967f8 -29.09%,
+    #599df7 51.77%,
+    #1efff4 129.35%
   );
   font-family: sans-serif;
   overflow-y: hidden;
