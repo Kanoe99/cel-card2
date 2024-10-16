@@ -32,7 +32,7 @@ export default class MenuBuilder {
         : this.buildDefaultTemplate();
 
     const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    Menu.setApplicationMenu(null);
 
     return menu;
   }
@@ -195,14 +195,14 @@ export default class MenuBuilder {
   buildDefaultTemplate() {
     const templateDefault = [
       {
-        label: '&File',
+        label: '&Файл',
         submenu: [
           {
-            label: '&Open',
+            label: '&Открыть',
             accelerator: 'Ctrl+O',
           },
           {
-            label: '&Close',
+            label: '&Закрыть',
             accelerator: 'Ctrl+W',
             click: () => {
               this.mainWindow.close();

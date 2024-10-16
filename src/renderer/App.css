@@ -12,14 +12,14 @@ body {
     #599df7 51.77%,
     #1efff4 129.35%
   );
-  font-family: sans-serif;
+  /* font-family: sans-serif;
   overflow-y: hidden;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 }
 
-button {
+/* button {
   background-color: white;
   padding: 10px 20px;
   border-radius: 10px;
@@ -59,4 +59,4 @@ a:hover {
   justify-content: center;
   align-items: center;
   margin: 20px 0;
-}
+} */
