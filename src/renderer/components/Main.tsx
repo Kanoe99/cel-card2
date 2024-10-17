@@ -5,18 +5,18 @@ import { Picture } from './ui/Picture';
 
 const Main = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [isPickedFormat, setIsPickedFormat] = useState<string | null>(null);
-  const [isPickedCel, setIsPickedCel] = useState<string | null>(null);
+  const [pickedFormat, setPickedFormat] = useState<string | null>(null);
+  const [pickedCel, setPickedCel] = useState<string | null>(null);
 
   const formats = ['A3', 'A4', 'A5'];
   const cards = ['Новый Год', '8 Марта', '23 Февраля'];
 
   function handleIsPickedFormat(item: string) {
-    setIsPickedFormat(item === isPickedFormat ? null : item);
+    setPickedFormat(item === pickedFormat ? null : item);
   }
 
   function handleIsPickedCel(item: string) {
-    setIsPickedCel(item === isPickedCel ? null : item);
+    setPickedCel(item === pickedCel ? null : item);
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,12 +68,12 @@ const Main = () => {
         <Menu
           formats={formats}
           cards={cards}
-          isPickedCel={isPickedCel}
-          isPickedFormat={isPickedFormat}
+          isPickedCel={pickedCel}
+          isPickedFormat={pickedFormat}
           handleIsPickedFormat={handleIsPickedFormat}
           handleIsPickedCel={handleIsPickedCel}
         />
-        <Picture imageSrc={imageSrc} />
+        <Picture imageSrc={imageSrc} cel={pickedCel} />
       </section>
     </main>
   );
