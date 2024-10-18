@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 
 interface PictureProps {
   imageSrc: string | null;
-  cel: string;
+  cel?: string | null;
 }
 
 const Picture: React.FC<PictureProps> = ({ imageSrc, cel }) => {
