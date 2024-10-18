@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu } from './ui/Menu';
 import { Header } from './ui/Header';
 import { Picture } from './ui/Picture';
+import { Test } from './ui/Test';
 
 const Main = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -75,6 +76,7 @@ const Main = () => {
         />
         <Picture imageSrc={imageSrc} cel={pickedCel} />
       </section>
+      <Test />
     </main>
   );
 };

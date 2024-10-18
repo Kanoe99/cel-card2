@@ -74,7 +74,16 @@ const configuration: webpack.Configuration = {
               importLoaders: 1,
             },
           },
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              // Explicitly use Dart Sass
+              implementation: require('sass'),
+              sassOptions: {
+                quietDeps: true, // Suppress warnings from dependencies
+              },
+            },
+          },
           {
             loader: 'postcss-loader',
             options: {
@@ -91,7 +100,15 @@ const configuration: webpack.Configuration = {
         use: [
           'style-loader',
           'css-loader',
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass'),
+              sassOptions: {
+                quietDeps: true,
+              },
+            },
+          },
           {
             loader: 'postcss-loader',
             options: {
@@ -102,35 +119,6 @@ const configuration: webpack.Configuration = {
           },
         ],
         exclude: /\.module\.s?(c|a)ss$/,
-      },
-      // Fonts
-      {
-        test: /\.(woff|woff2|eot|ttf|otf)$/i,
-        type: 'asset/resource',
-      },
-      // Images
-      {
-        test: /\.(png|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
-      },
-      // SVG
-      {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: '@svgr/webpack',
-            options: {
-              prettier: false,
-              svgo: false,
-              svgoConfig: {
-                plugins: [{ removeViewBox: false }],
-              },
-              titleProp: true,
-              ref: true,
-            },
-          },
-          'file-loader',
-        ],
       },
     ],
   },

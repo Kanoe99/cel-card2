@@ -26,4 +26,10 @@ const electronHandler = {
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
 
+contextBridge.exposeInMainWorld('electronStore', {
+  set: (key: string, value: string) =>
+    ipcRenderer.invoke('store:set', key, value),
+  get: (key: string) => ipcRenderer.invoke('store:get', key),
+});
+
 export type ElectronHandler = typeof electronHandler;
