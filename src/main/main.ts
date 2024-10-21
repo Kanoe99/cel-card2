@@ -20,6 +20,28 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
+ipcMain.on('print-content', (event, { content }) => {
+  const printWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    show: false, // Keeps the window hidden
+    webPreferences: {
+      offscreen: true, // Prevent UI flicker
+    },
+  });
+
+  printWindow.loadURL(
+    `data:text/html;charset=utf-8,${encodeURIComponent(content)}`,
+  );
+
+  printWindow.webContents.once('did-finish-load', () => {
+    printWindow.webContents.print({}, (success, errorType) => {
+      if (!success) console.error('Print failed:', errorType);
+      printWindow.close(); // Cleanup after printing
+    });
+  });
+});
+
 ipcMain.on('electron-store-get', async (event, val) => {
   event.returnValue = store.get(val);
 });

@@ -33,6 +33,18 @@ body {
   display: none; /* Chrome, Safari, Opera */
 }
 
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area {
+    visibility: visible;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
 
 
 /* button {

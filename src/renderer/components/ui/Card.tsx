@@ -11,13 +11,18 @@ const Card: React.FC<FrameProps> = ({
   handleClick,
   styles,
 }) => {
+  const handleClickPD = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    handleClick();
+  };
+
   return (
-    <div
-      className={`${isPicked && 'shadow-inner-md hover:shadow-inner-lg'} px-3 py-5 cursor-pointer text-center shadow-md transition duration-300 hover:shadow-lg !${styles}`}
-      onClick={() => handleClick()}
+    <button
+      className={`${isPicked && 'shadow-inner-md hover:shadow-inner-lg'} px-3 py-5 cursor-pointer text-center shadow-md transition duration-300 hover:shadow-lg ${styles}`}
+      onClick={handleClickPD}
     >
       {type}
-    </div>
+    </button>
   );
 };
 

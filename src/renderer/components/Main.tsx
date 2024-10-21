@@ -6,21 +6,25 @@ import { Test } from './ui/Test';
 
 const Main = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [pickedFormat, setPickedFormat] = useState<string | null>(null);
-  const [pickedCel, setPickedCel] = useState<string | null>(null);
+  const [isPickedFormat, setPickedFormat] = useState<string | null>('A5');
+  const [isPickedCard, setPickedCard] = useState<string | null>(null);
 
   const [formats, setFormats] = useState(
     () => window.electron.store.get('formats') || [],
   );
+  const [celebrations, setCelebrations] = useState(
+    () => window.electron.store.get('celebrations') || [],
+  );
 
-  const cards = ['Новый Год', '8 Марта', '23 Февраля'];
+  console.log(isPickedCard);
+  console.log(celebrations.filter((cel) => cel.key === isPickedCard)[0]);
 
   function handleIsPickedFormat(item: string) {
-    setPickedFormat(item === pickedFormat ? null : item);
+    setPickedFormat(item === isPickedFormat ? null : item);
   }
 
-  function handleIsPickedCel(item: string) {
-    setPickedCel(item === pickedCel ? null : item);
+  function handleIsPickedCard(item: string) {
+    setPickedCard(item === isPickedCard ? null : item); // Toggle selection
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,14 +48,19 @@ const Main = () => {
   };
 
   const handlePrint = () => {
-    window.print();
+    window.electron.ipcRenderer.sendMessage('print-content', {
+      content: `
+        <div style="text-align: center; width: 1000px !important;">
+          ${imageSrc ? `<img src="${imageSrc}" alt="Image Preview" />` : ''}
+        </div>
+      `,
+    });
   };
 
-  // Hook to listen for Ctrl + P and trigger handlePrint
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key === 'p') {
-        event.preventDefault(); // Prevent browser's default print dialog
+        event.preventDefault();
         handlePrint();
       }
     };
@@ -68,36 +77,20 @@ const Main = () => {
         handleDelete={handleDelete}
         handlePrint={handlePrint}
       />
-      <button
-        className="bg-red-500"
-        onClick={() => {
-          // Retrieve existing formats
-          const existingFormats = window.electron.store.get('formats') || [];
-
-          // Add a new format
-          const newFormat = { key: 'A8' };
-          existingFormats.push(newFormat);
-
-          // Store the updated formats array
-          window.electron.store.set('formats', existingFormats);
-
-          // Log the updated formats to check
-          console.log(window.electron.store.get('formats'));
-        }}
-      >
-        Click Me!
-      </button>
-
       <section className="flex px-14 justify-between py-12 h-fit gap-20">
         <Menu
           formats={formats}
-          cards={cards}
-          isPickedCel={pickedCel}
-          isPickedFormat={pickedFormat}
+          cards={celebrations}
+          isPickedCard={isPickedCard}
+          isPickedFormat={isPickedFormat}
           handleIsPickedFormat={handleIsPickedFormat}
-          handleIsPickedCel={handleIsPickedCel}
+          handleIsPickedCard={handleIsPickedCard}
         />
-        <Picture imageSrc={imageSrc} cel={pickedCel} />
+        <Picture
+          className="print-area"
+          imageSrc={imageSrc}
+          cel={celebrations.filter((cel) => cel.key === isPickedCard)[0]}
+        />
       </section>
       <Test />
     </main>
