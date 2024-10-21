@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Menu } from './ui/Menu';
 import { Header } from './ui/Header';
 import { Picture } from './ui/Picture';
-import { Test } from './ui/Test';
 
 const Main = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -17,14 +16,18 @@ const Main = () => {
   );
 
   console.log(isPickedCard);
-  console.log(celebrations.filter((cel) => cel.key === isPickedCard)[0]);
+  console.log(
+    celebrations.filter(
+      (cel: { key: string; value: string }) => cel.key === isPickedCard,
+    )[0],
+  );
 
   function handleIsPickedFormat(item: string) {
     setPickedFormat(item === isPickedFormat ? null : item);
   }
 
   function handleIsPickedCard(item: string) {
-    setPickedCard(item === isPickedCard ? null : item); // Toggle selection
+    setPickedCard(item === isPickedCard ? null : item);
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,10 +92,13 @@ const Main = () => {
         <Picture
           className="print-area"
           imageSrc={imageSrc}
-          cel={celebrations.filter((cel) => cel.key === isPickedCard)[0]}
+          cel={
+            celebrations.filter(
+              (cel: { key: string; value: string }) => cel.key === isPickedCard,
+            )[0]
+          }
         />
       </section>
-      <Test />
     </main>
   );
 };
