@@ -9,7 +9,10 @@ const Main = () => {
   const [pickedFormat, setPickedFormat] = useState<string | null>(null);
   const [pickedCel, setPickedCel] = useState<string | null>(null);
 
-  const formats = ['A3', 'A4', 'A5'];
+  const [formats, setFormats] = useState(
+    () => window.electron.store.get('formats') || [],
+  );
+
   const cards = ['Новый Год', '8 Марта', '23 Февраля'];
 
   function handleIsPickedFormat(item: string) {
@@ -65,6 +68,26 @@ const Main = () => {
         handleDelete={handleDelete}
         handlePrint={handlePrint}
       />
+      <button
+        className="bg-red-500"
+        onClick={() => {
+          // Retrieve existing formats
+          const existingFormats = window.electron.store.get('formats') || [];
+
+          // Add a new format
+          const newFormat = { key: 'A8' };
+          existingFormats.push(newFormat);
+
+          // Store the updated formats array
+          window.electron.store.set('formats', existingFormats);
+
+          // Log the updated formats to check
+          console.log(window.electron.store.get('formats'));
+        }}
+      >
+        Click Me!
+      </button>
+
       <section className="flex px-14 justify-between py-12 h-fit gap-20">
         <Menu
           formats={formats}

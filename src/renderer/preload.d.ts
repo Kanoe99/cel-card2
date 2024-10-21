@@ -4,7 +4,7 @@ declare global {
   // eslint-disable-next-line no-unused-vars
   interface Window {
     electron: ElectronHandler;
-    electronStore: {
+    store: {
       set: (key: string, value: string) => Promise<void>;
       get: (key: string) => Promise<string | null>;
     };

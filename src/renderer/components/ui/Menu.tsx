@@ -1,13 +1,17 @@
 import { Frame } from './Frame';
 import { Card } from './Card';
 
+interface Format {
+  key: string;
+}
+
 interface MenuProps {
-  formats: string[];
+  formats: Format[];
   cards: string[];
-  handleIsPickedFormat: (format: string) => void;
-  handleIsPickedCel: (card: string) => void;
   isPickedCel: string | null;
   isPickedFormat: string | null;
+  handleIsPickedFormat: (format: string) => void;
+  handleIsPickedCel: (card: string) => void;
 }
 
 const Menu: React.FC<MenuProps> = ({
@@ -24,10 +28,10 @@ const Menu: React.FC<MenuProps> = ({
       <div className="flex justify-start gap-10">
         {formats.map((format) => (
           <Frame
-            key={format}
-            type={format}
-            isPicked={format === isPickedFormat}
-            handleClick={() => handleIsPickedFormat(format)} // Pass the format
+            key={format.key}
+            type={format.key}
+            isPicked={format.key === isPickedFormat} // Compare the key
+            handleClick={() => handleIsPickedFormat(format.key)} // Pass the key
           />
         ))}
       </div>
@@ -39,7 +43,7 @@ const Menu: React.FC<MenuProps> = ({
             styles="text-sm"
             key={card}
             type={card}
-            isPicked={card === isPickedCel}
+            isPicked={card === isPickedCel} // This part is correct
             handleClick={() => handleIsPickedCel(card)} // Pass the card
           />
         ))}
