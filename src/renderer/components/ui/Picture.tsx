@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Text } from './Text';
 
 interface PictureProps {
   imageSrc: string | null;
@@ -36,7 +37,6 @@ const Picture: React.FC<PictureProps> = ({ imageSrc, card }) => {
     const newX = event.clientX - dragStart.current.x;
     const newY = event.clientY - dragStart.current.y;
 
-    // Ensure the image stays within the wrapper's boundaries
     setPosition({
       x: Math.min(0, Math.max(wrapper.width - imgSize.width, newX)),
       y: Math.min(0, Math.max(wrapper.height - imgSize.height, newY)),
@@ -80,7 +80,7 @@ const Picture: React.FC<PictureProps> = ({ imageSrc, card }) => {
             }}
             onMouseDown={handleMouseDown}
           />
-          <h2 className="bg-red-500 absolute z-[100] text-white">{card}</h2>
+          <Text>{card}</Text>
         </>
       ) : (
         <div className="absolute inset-0 grid place-items-center text-center font-black text-4xl">
