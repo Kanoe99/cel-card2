@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Menu } from './ui/Menu';
 import { Header } from './ui/Header';
 import { Picture } from './ui/Picture';
-import { Test } from './ui/Test';
 
 const Main = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -68,26 +67,6 @@ const Main = () => {
         handleDelete={handleDelete}
         handlePrint={handlePrint}
       />
-      <button
-        className="bg-red-500"
-        onClick={() => {
-          // Retrieve existing formats
-          const existingFormats = window.electron.store.get('formats') || [];
-
-          // Add a new format
-          const newFormat = { key: 'A8' };
-          existingFormats.push(newFormat);
-
-          // Store the updated formats array
-          window.electron.store.set('formats', existingFormats);
-
-          // Log the updated formats to check
-          console.log(window.electron.store.get('formats'));
-        }}
-      >
-        Click Me!
-      </button>
-
       <section className="flex px-14 justify-between py-12 h-fit gap-20">
         <Menu
           formats={formats}
@@ -99,7 +78,6 @@ const Main = () => {
         />
         <Picture imageSrc={imageSrc} cel={pickedCel} />
       </section>
-      <Test />
     </main>
   );
 };
