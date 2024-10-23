@@ -49,11 +49,10 @@ const Main = () => {
     window.print();
   };
 
-  // Hook to listen for Ctrl + P and trigger handlePrint
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key === 'p') {
-        event.preventDefault(); // Prevent browser's default print dialog
+        event.preventDefault();
         handlePrint();
       }
     };
@@ -79,7 +78,16 @@ const Main = () => {
           handleIsPickedFormat={handleIsPickedFormat}
           handleIsPickedCard={handleIsPickedCard}
         />
-        <Picture imageSrc={imageSrc} cel={isPickedCard} />
+        <Picture
+          imageSrc={imageSrc}
+          card={
+            isPickedCard &&
+            cards.filter(
+              (card: { key: string; value: string }) =>
+                card.key === isPickedCard,
+            )[0].value
+          }
+        />
       </section>
     </main>
   );
