@@ -6,20 +6,23 @@ import { Picture } from './ui/Picture';
 const Main = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [pickedFormat, setPickedFormat] = useState<string | null>(null);
-  const [pickedCel, setPickedCel] = useState<string | null>(null);
+  const [isPickedCard, setIsPickedCard] = useState<string | null>(null);
 
   const [formats, setFormats] = useState(
     () => window.electron.store.get('formats') || [],
   );
+  const [cards, setCards] = useState(
+    () => window.electron.store.get('cards') || [],
+  );
 
-  const cards = ['Новый Год', '8 Марта', '23 Февраля'];
+  // const cards = ['Новый Год', '8 Марта', '23 Февраля'];
 
   function handleIsPickedFormat(item: string) {
     setPickedFormat(item === pickedFormat ? null : item);
   }
 
-  function handleIsPickedCel(item: string) {
-    setPickedCel(item === pickedCel ? null : item);
+  function handleIsPickedCard(item: string) {
+    setIsPickedCard(item === isPickedCard ? null : item);
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,12 +74,12 @@ const Main = () => {
         <Menu
           formats={formats}
           cards={cards}
-          isPickedCel={pickedCel}
+          isPickedCard={isPickedCard}
           isPickedFormat={pickedFormat}
           handleIsPickedFormat={handleIsPickedFormat}
-          handleIsPickedCel={handleIsPickedCel}
+          handleIsPickedCard={handleIsPickedCard}
         />
-        <Picture imageSrc={imageSrc} cel={pickedCel} />
+        <Picture imageSrc={imageSrc} cel={isPickedCard} />
       </section>
     </main>
   );

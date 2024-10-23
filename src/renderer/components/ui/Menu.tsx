@@ -5,23 +5,29 @@ interface Format {
   key: string;
 }
 
+interface Card {
+  key: string;
+  value: string;
+}
+
 interface MenuProps {
   formats: Format[];
-  cards: string[];
-  isPickedCel: string | null;
+  cards: Card[];
+  isPickedCard: string | null;
   isPickedFormat: string | null;
   handleIsPickedFormat: (format: string) => void;
-  handleIsPickedCel: (card: string) => void;
+  handleIsPickedCard: (card: string) => void;
 }
 
 const Menu: React.FC<MenuProps> = ({
   formats,
   cards,
-  isPickedCel,
+  isPickedCard,
   isPickedFormat,
   handleIsPickedFormat,
-  handleIsPickedCel,
+  handleIsPickedCard,
 }) => {
+  console.log(isPickedCard);
   return (
     <div className="h-fit flex flex-1 flex-col gap-10 text-lg font-medium shadow px-10 py-5">
       <h2 className="border-b px-2">Выберите формат</h2>
@@ -30,8 +36,8 @@ const Menu: React.FC<MenuProps> = ({
           <Frame
             key={format.key}
             type={format.key}
-            isPicked={format.key === isPickedFormat} // Compare the key
-            handleClick={() => handleIsPickedFormat(format.key)} // Pass the key
+            isPicked={format.key === isPickedFormat}
+            handleClick={() => handleIsPickedFormat(format.key)}
           />
         ))}
       </div>
@@ -41,10 +47,10 @@ const Menu: React.FC<MenuProps> = ({
         {cards.map((card) => (
           <Card
             styles="text-sm"
-            key={card}
-            type={card}
-            isPicked={card === isPickedCel} // This part is correct
-            handleClick={() => handleIsPickedCel(card)} // Pass the card
+            key={card.key}
+            type={card.key}
+            isPicked={card.key === isPickedCard}
+            handleClick={() => handleIsPickedCard(card.key)}
           />
         ))}
       </div>
