@@ -5,13 +5,18 @@ interface FrameProps {
 }
 
 const Frame: React.FC<FrameProps> = ({ type, isPicked, handleClick }) => {
+  const handleClickPD = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    handleClick();
+  };
+
   return (
-    <div
+    <button
       className={`${isPicked && 'shadow-inner-md hover:shadow-inner-lg'} px-3 py-5 cursor-pointer text-center text-6xl shadow-md transition duration-300 hover:shadow-lg`}
-      onClick={() => handleClick()}
+      onClick={handleClickPD}
     >
       {type}
-    </div>
+    </button>
   );
 };
 
