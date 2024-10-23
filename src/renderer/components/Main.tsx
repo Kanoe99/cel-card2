@@ -5,7 +5,9 @@ import { Picture } from './ui/Picture';
 
 const Main = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [pickedFormat, setPickedFormat] = useState<string | null>(null);
+  const [pickedFormat, setPickedFormat] = useState<string | null>(
+    window.electron.store.get('formats')[0].key,
+  );
   const [isPickedCard, setIsPickedCard] = useState<string | null>(null);
 
   const [formats, setFormats] = useState(
@@ -15,7 +17,11 @@ const Main = () => {
     () => window.electron.store.get('cards') || [],
   );
 
-  // const cards = ['Новый Год', '8 Марта', '23 Февраля'];
+  const cardText =
+    isPickedCard &&
+    cards.filter(
+      (card: { key: string; value: string }) => card.key === isPickedCard,
+    )[0].value;
 
   function handleIsPickedFormat(item: string) {
     setPickedFormat(item === pickedFormat ? null : item);
@@ -78,16 +84,7 @@ const Main = () => {
           handleIsPickedFormat={handleIsPickedFormat}
           handleIsPickedCard={handleIsPickedCard}
         />
-        <Picture
-          imageSrc={imageSrc}
-          card={
-            isPickedCard &&
-            cards.filter(
-              (card: { key: string; value: string }) =>
-                card.key === isPickedCard,
-            )[0].value
-          }
-        />
+        <Picture imageSrc={imageSrc} card={cardText} />
       </section>
     </main>
   );

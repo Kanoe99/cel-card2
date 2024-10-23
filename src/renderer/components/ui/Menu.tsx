@@ -27,7 +27,6 @@ const Menu: React.FC<MenuProps> = ({
   handleIsPickedFormat,
   handleIsPickedCard,
 }) => {
-  console.log(isPickedCard);
   return (
     <div className="h-fit flex flex-1 flex-col gap-10 text-lg font-medium shadow px-10 py-5">
       <h2 className="border-b px-2">Выберите формат</h2>
