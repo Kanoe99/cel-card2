@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Menu } from './ui/Menu';
 import { Header } from './ui/Header';
 import { Picture } from './ui/Picture';
@@ -9,9 +9,13 @@ import {
   handleSave,
   handleDelete,
   handlePrint,
-} from '../utils/handlers'; // Adjust the path based on your project structure
+} from '../utils/handlers';
+import { KonvaTest } from './ui/KonvaTest';
 
 const Main = () => {
+  const [fontSize, setFontSize] = useState<string>('30px');
+  const [fontFamily, setFontFamily] = useState<string>('Arial');
+
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [pickedFormat, setPickedFormat] = useState<string | null>(
     window.electron.store.get('formats')[0].key,
@@ -52,7 +56,15 @@ const Main = () => {
             setIsPickedCard(handleIsPickedCard(isPickedCard, item))
           }
         />
-        <Picture imageSrc={imageSrc} card={cardText} />
+        <KonvaTest />
+        {/* <Picture
+          width={550}
+          height={550 * 1.414}
+          fontFamily="Arial"
+          fontSize="30px"
+          imageSrc={imageSrc}
+          card={cardText}
+        /> */}
       </section>
     </main>
   );

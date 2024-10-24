@@ -106,8 +106,10 @@
     "electron-log": "^4.4.8",
     "electron-store": "^10.0.0",
     "electron-updater": "^6.1.4",
+    "konva": "^9.3.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-konva": "^18.2.10",
     "react-router-dom": "^6.16.0"
   },
   "devDependencies": {
