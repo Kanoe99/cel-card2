@@ -1,5 +1,3 @@
-// Disable no-unused-vars, broken for spread args
-/* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels = 'ipc-example' | 'print-content';
@@ -23,10 +21,12 @@ const electronHandler = {
     },
   },
   store: {
+    // Sync call for getting data from the main process
     get(key: string) {
       return ipcRenderer.sendSync('electron-store-get', key);
     },
-    set(property: string, val: string) {
+    // Async call for setting data in the main process
+    set(property: string, val: unknown) {
       ipcRenderer.send('electron-store-set', property, val);
     },
   },
@@ -34,8 +34,9 @@ const electronHandler = {
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
 
+// Expose store-specific methods
 contextBridge.exposeInMainWorld('electronStore', {
-  set: (key: string, value: string) =>
+  set: (key: string, value: unknown) =>
     ipcRenderer.invoke('store:set', key, value),
   get: (key: string) => ipcRenderer.invoke('store:get', key),
 });

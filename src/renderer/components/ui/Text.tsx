@@ -1,13 +1,13 @@
+import React from 'react';
+
 interface TextProps {
-  text: string;
+  children: React.ReactNode;
 }
 
-const Text: React.FC<TextProps> = ({ text }) => {
-  const congratulations = text;
-
+const Text: React.FC<TextProps> = ({ children }) => {
   return (
-    <h2 className="absolute grid place-items-center h-full w-full z-[100] text-white">
-      {congratulations}
+    <h2 className="h-full grid place-items-center absolute z-[100] text-white">
+      {children}
     </h2>
   );
 };

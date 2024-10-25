@@ -1,94 +1,70 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Text } from './Text';
+// width: '550px',
+//         height: `${550 * 1.414}px`, // A3 ratio
+
+import React, { useRef, useEffect } from 'react';
+import Textarea from '../canvas/Canvas';
 
 interface PictureProps {
   imageSrc: string | null;
-  cel?: { key: string; value: string } | undefined;
-  className?: string;
+  width: number;
+  height: number;
+  fontSize: string;
+  fontFamily: string;
+  card: string;
 }
 
-const Picture: React.FC<PictureProps> = ({ imageSrc, cel, className }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [imgSize, setImgSize] = useState({ width: 0, height: 0 });
+const Picture: React.FC<PictureProps> = ({
+  imageSrc,
+  width,
+  height,
+  fontSize,
+  fontFamily,
+  card,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const dragStart = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const pictureRef = useRef<HTMLDivElement>(null);
+  const draw = (ctx: CanvasRenderingContext2D) => {
+    const img = new Image();
+    if (imageSrc) {
+      img.src = imageSrc;
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, width, height);
+
+        ctx.font = `${fontSize} ${fontFamily}`;
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        ctx.fillText(card, width / 2, height / 2);
+      };
+    }
+  };
 
   useEffect(() => {
-    if (pictureRef.current && imageSrc) {
-      const img = new Image();
-      img.src = imageSrc;
-      img.onload = () => setImgSize({ width: img.width, height: img.height });
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const context = canvas.getContext('2d');
+      if (context) {
+        canvas.width = width;
+        canvas.height = height;
+        draw(context);
+      }
     }
-  }, [imageSrc]);
-
-  const handleMouseDown = (event: React.MouseEvent) => {
-    setIsDragging(true);
-    dragStart.current = {
-      x: event.clientX - position.x,
-      y: event.clientY - position.y,
-    };
-  };
-
-  const handleMouseMove = (event: React.MouseEvent) => {
-    if (!isDragging || !pictureRef.current) return;
-
-    const wrapper = pictureRef.current.getBoundingClientRect();
-    const newX = event.clientX - dragStart.current.x;
-    const newY = event.clientY - dragStart.current.y;
-
-    // Ensure the image stays within the wrapper's boundaries
-    setPosition({
-      x: Math.min(0, Math.max(wrapper.width - imgSize.width, newX)),
-      y: Math.min(0, Math.max(wrapper.height - imgSize.height, newY)),
-    });
-  };
-
-  const handleMouseUp = () => setIsDragging(false);
+  }, [imageSrc, width, height, card]);
 
   return (
     <div
-      ref={pictureRef}
-      className={`relative border-8 overflow-hidden ${
-        imageSrc
-          ? ''
-          : 'bg-green-300 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'
-      }`}
+      className={`${canvasRef && 'bg-green-300 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'} relative border-8`}
       style={{
         width: '550px',
-        height: `${550 * 1.414}px`, // A3 ratio
-        maxWidth: '100%',
-        position: 'relative',
-        cursor: isDragging ? 'grabbing' : 'grab',
+        height: `${550 * 1.414}px`,
       }}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
     >
-      {imageSrc ? (
-        <>
-          <img
-            src={imageSrc}
-            alt="Uploaded"
-            draggable={false}
-            style={{
-              position: 'absolute',
-              top: `${position.y}px`,
-              left: `${position.x}px`,
-              width: imgSize.width > 550 ? '100%' : 'auto',
-              height: imgSize.height > 550 * 1.414 ? '100%' : 'auto',
-              objectFit: 'contain',
-            }}
-            onMouseDown={handleMouseDown}
-          />
-          {cel && <Text text={cel.value} />}
-        </>
-      ) : (
-        <div className="absolute inset-0 grid place-items-center text-center font-black text-4xl">
-          Выберите картинку
-        </div>
-      )}
+      <canvas
+        ref={canvasRef}
+        style={{ width: `${width}px`, height: `${height}px` }}
+      />
+      <Textarea card={card} />
     </div>
   );
 };

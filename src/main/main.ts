@@ -6,67 +6,70 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
-const store = new Store({
-  cwd: path.join(__dirname, 'electron-store'),
+// Define the store type, allowing string keys and unknown value types
+interface StoreType {
+  [key: string]: unknown;
+}
+
+// Initialize electron-store with a custom directory for storage
+const store = new Store<StoreType>({
+  cwd: path.join(__dirname, 'electron-store'), // Store location
 });
 
 class AppUpdater {
   constructor() {
-    log.transports.file.level = 'info';
+    log.transports.file.level = 'info'; // Set log level
     autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.checkForUpdatesAndNotify(); // Auto-update check
   }
 }
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.on('print-content', (event, { content }) => {
-  const printWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    show: false, // Keeps the window hidden
-    webPreferences: {
-      offscreen: true, // Prevent UI flicker
-    },
-  });
-
-  printWindow.loadURL(
-    `data:text/html;charset=utf-8,${encodeURIComponent(content)}`,
-  );
-
-  printWindow.webContents.once('did-finish-load', () => {
-    printWindow.webContents.print({}, (success, errorType) => {
-      if (!success) console.error('Print failed:', errorType);
-      printWindow.close(); // Cleanup after printing
-    });
-  });
+// Listen for requests to get values from the store
+ipcMain.on('electron-store-get', (event, key: string) => {
+  try {
+    // @ts-ignore
+    event.returnValue = store.get(key); // Fetch value from store
+  } catch (error) {
+    console.error(`Error fetching value for key "${key}":`, error);
+    event.returnValue = null;
+  }
 });
 
-ipcMain.on('electron-store-get', async (event, val) => {
-  event.returnValue = store.get(val);
-});
-ipcMain.on('electron-store-set', async (event, key, val) => {
-  store.set(key, val);
+// Listen for requests to set values in the store
+ipcMain.on('electron-store-set', (event, key: string, val: unknown) => {
+  try {
+    // @ts-ignore
+    store.set(key, val); // Store the key-value pair
+  } catch (error) {
+    console.error(`Error setting value for key "${key}":`, error);
+  }
 });
 
-ipcMain.on('ipc-example', async (event, arg) => {
+// Example IPC handler for communication testing
+ipcMain.on('ipc-example', (event, arg: string) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
+// Enable source map support in production
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
 }
 
+// Check if the app is in debug mode
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
+// Enable Electron debugging in development
 if (isDebug) {
   require('electron-debug')();
 }
 
+// Install dev tools extensions (e.g., React Developer Tools)
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
@@ -80,14 +83,27 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
-ipcMain.handle('store:set', (event, key: string, value: string) => {
-  store.set(key, value);
+// IPC handlers for set/get actions in Electron Store
+ipcMain.handle('store:set', async (event, key: string, value: unknown) => {
+  try {
+    // @ts-ignore
+    store.set(key, value);
+  } catch (error) {
+    console.error(`Error setting store value for key "${key}":`, error);
+  }
 });
 
-ipcMain.handle('store:get', (event, key: string) => {
-  return store.get(key);
+ipcMain.handle('store:get', async (event, key: string) => {
+  try {
+    // @ts-ignore
+    return store.get(key);
+  } catch (error) {
+    console.error(`Error getting store value for key "${key}":`, error);
+    return null;
+  }
 });
 
+// Function to create the application window
 const createWindow = async () => {
   if (isDebug) {
     await installExtensions();
@@ -133,24 +149,18 @@ const createWindow = async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  // Open urls in the user's browser
+  // Open URLs externally (in default browser) when clicked in the app
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
+  // Initialize app updater for automatic updates
   new AppUpdater();
 };
 
-/**
- * Add event listeners...
- */
-
+// Handle application lifecycle events
 app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -161,8 +171,6 @@ app
   .then(() => {
     createWindow();
     app.on('activate', () => {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
     });
   })

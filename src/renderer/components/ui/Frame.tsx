@@ -5,8 +5,8 @@ interface FrameProps {
 }
 
 const Frame: React.FC<FrameProps> = ({ type, isPicked, handleClick }) => {
-  const handleClickPD = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleClickPD = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     handleClick();
   };
 
