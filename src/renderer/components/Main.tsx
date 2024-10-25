@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Menu } from './ui/Menu';
 import { Header } from './ui/Header';
-import { Picture } from './ui/Picture';
 import {
   handleIsPickedFormat,
   handleIsPickedCard,
@@ -10,7 +9,7 @@ import {
   handleDelete,
   handlePrint,
 } from '../utils/handlers';
-import { KonvaTest } from './ui/KonvaTest';
+import { Canvas } from './canvas/Canvas';
 
 const Main = () => {
   const [fontSize, setFontSize] = useState<string>('30px');
@@ -56,15 +55,7 @@ const Main = () => {
             setIsPickedCard(handleIsPickedCard(isPickedCard, item))
           }
         />
-        <KonvaTest />
-        {/* <Picture
-          width={550}
-          height={550 * 1.414}
-          fontFamily="Arial"
-          fontSize="30px"
-          imageSrc={imageSrc}
-          card={cardText}
-        /> */}
+        <Canvas cardText={cardText} imageSrc={imageSrc} />
       </section>
     </main>
   );
