@@ -8,8 +8,23 @@ interface CanvasProps {
   imageSrc: string | null | undefined;
 }
 
+interface ImageProps {
+  width: number;
+  height: number;
+}
+
+interface DownloadProps {
+  uri: string;
+  name: string;
+}
+
 const Canvas: React.FC<CanvasProps> = ({ cardText, imageSrc }) => {
   const [image, setImage] = useState<HTMLImageElement | undefined>(undefined);
+  const [aspectRatio, setAspectRatio] = useState<ImageProps>({
+    width: 550,
+    height: 550 * 1.414,
+  });
+  const scale = image && aspectRatio.width / image.naturalWidth;
 
   function generateItems() {
     const items = [];
@@ -43,14 +58,16 @@ const Canvas: React.FC<CanvasProps> = ({ cardText, imageSrc }) => {
 
   return (
     <Stage
-      width={550}
-      height={550 * 1.414}
+      width={aspectRatio.width}
+      height={aspectRatio.height}
       className="bg-green-300 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 border-8"
     >
       <Layer>
         <Text text={cardText} />
 
         <Image
+          scaleX={scale}
+          scaleY={scale}
           id={imageId}
           image={image}
           draggable={true}

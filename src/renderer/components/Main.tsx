@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { Menu } from './ui/Menu';
 import { Header } from './ui/Header';
 import {
-  handleIsPickedFormat,
-  handleIsPickedCard,
+  handleIsPickedItem,
   handleFileChange,
   handleSave,
   handleDelete,
@@ -15,8 +14,10 @@ const Main = () => {
   const [fontSize, setFontSize] = useState<string>('30px');
   const [fontFamily, setFontFamily] = useState<string>('Arial');
 
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [pickedFormat, setPickedFormat] = useState<string | null>(
+  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+  const [fileName, setFileName] = useState<string | undefined>(undefined);
+
+  const [isPickedFormat, setIsPickedFormat] = useState<string | null>(
     window.electron.store.get('formats')[0].key,
   );
   const [isPickedCard, setIsPickedCard] = useState<string | null>(null);
@@ -34,11 +35,15 @@ const Main = () => {
       (card: { key: string; value: string }) => card.key === isPickedCard,
     )[0].value;
 
+  console.log(imageSrc);
+
   return (
     <main className="h-screen overflow-auto">
       <Header
-        handleFileChange={(event) => handleFileChange(event, setImageSrc)}
-        handleSave={() => handleSave(imageSrc)}
+        handleFileChange={(event) =>
+          handleFileChange(event, setImageSrc, setFileName)
+        }
+        handleSave={() => handleSave({ uri: imageSrc, fileName: fileName })}
         handleDelete={() => handleDelete(setImageSrc)}
         handlePrint={handlePrint}
       />
@@ -47,12 +52,16 @@ const Main = () => {
           formats={formats}
           cards={cards}
           isPickedCard={isPickedCard}
-          isPickedFormat={pickedFormat}
+          isPickedFormat={isPickedFormat}
           handleIsPickedFormat={(item) =>
-            setPickedFormat(handleIsPickedFormat(pickedFormat, item))
+            setIsPickedFormat(
+              handleIsPickedItem({ isPickedItem: isPickedFormat, item: item }),
+            )
           }
           handleIsPickedCard={(item) =>
-            setIsPickedCard(handleIsPickedCard(isPickedCard, item))
+            setIsPickedCard(
+              handleIsPickedItem({ isPickedItem: isPickedCard, item: item }),
+            )
           }
         />
         <Canvas cardText={cardText} imageSrc={imageSrc} />

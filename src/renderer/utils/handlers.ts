@@ -1,34 +1,44 @@
-const handleIsPickedFormat = (pickedFormat: string | null, item: string) => {
-  return item === pickedFormat ? null : item;
-};
+import { DownloadProps, PickedProps } from './interfaces';
 
-const handleIsPickedCard = (isPickedCard: string | null, item: string) => {
-  return item === isPickedCard ? null : item;
+const handleIsPickedItem = ({ isPickedItem, item }: PickedProps) => {
+  return item === isPickedItem ? null : item;
 };
 
 const handleFileChange = (
   event: React.ChangeEvent<HTMLInputElement>,
-  setImageSrc: React.Dispatch<React.SetStateAction<string | null>>,
+  setImageSrc: React.Dispatch<React.SetStateAction<string | undefined>>,
+  setFileName: React.Dispatch<React.SetStateAction<string | undefined>>,
 ) => {
   const file = event.target.files?.[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = (e) => setImageSrc(e.target?.result as string);
+    reader.onload = (e) => {
+      const filename_edited =
+        file.name.slice(0, file.name.indexOf('.')) +
+        '_edited' +
+        file.name.slice(file.name.indexOf('.'));
+      setImageSrc(e.target?.result as string), setFileName(filename_edited);
+    };
     reader.readAsDataURL(file);
   }
   event.target.value = '';
 };
 
-const handleSave = (imageSrc: string | null) => {
-  if (imageSrc) {
-    console.log('Saving image:', imageSrc);
+const handleSave = ({ uri, fileName }: DownloadProps) => {
+  if ((uri, fileName)) {
+    let link = document.createElement('a');
+    link.download = fileName;
+    link.href = uri;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 };
 
 const handleDelete = (
-  setImageSrc: React.Dispatch<React.SetStateAction<string | null>>,
+  setImageSrc: React.Dispatch<React.SetStateAction<string | undefined>>,
 ) => {
-  setImageSrc(null);
+  setImageSrc(undefined);
 };
 
 const handlePrint = () => {
@@ -38,8 +48,7 @@ const handlePrint = () => {
 export {
   handleDelete,
   handleFileChange,
-  handleIsPickedCard,
-  handleIsPickedFormat,
+  handleIsPickedItem,
   handlePrint,
   handleSave,
 };
