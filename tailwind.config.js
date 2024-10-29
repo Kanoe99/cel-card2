@@ -1,13 +1,14 @@
 import colors from 'tailwindcss/colors';
+
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx,html}'],
-  purge: [],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class', // or 'media' if you prefer
   theme: {
     extend: {
       colors: {
         sky: colors.sky,
         cyan: colors.cyan,
+        customBlue: '#1DA1F2', // Example of custom color
       },
       width: {
         pic: 'aspect-[1/1.41]',
@@ -20,7 +21,11 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      backgroundColor: ['hover', 'focus'], // Example of extending variants
+    },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'), // Include the forms plugin
+  ],
 };

@@ -1,5 +1,6 @@
+import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import fs from 'fs';
 import Store from 'electron-store';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -83,7 +84,6 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
-// IPC handlers for set/get actions in Electron Store
 ipcMain.handle('store:set', async (event, key: string, value: unknown) => {
   try {
     // @ts-ignore
@@ -103,7 +103,6 @@ ipcMain.handle('store:get', async (event, key: string) => {
   }
 });
 
-// Function to create the application window
 const createWindow = async () => {
   if (isDebug) {
     await installExtensions();
@@ -149,13 +148,11 @@ const createWindow = async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  // Open URLs externally (in default browser) when clicked in the app
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });
 
-  // Initialize app updater for automatic updates
   new AppUpdater();
 };
 

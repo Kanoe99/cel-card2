@@ -25,7 +25,7 @@ const handleFileChange = (
 };
 
 const handleSave = ({ uri, fileName }: DownloadProps) => {
-  if ((uri, fileName)) {
+  if (uri && fileName) {
     let link = document.createElement('a');
     link.download = fileName;
     link.href = uri;

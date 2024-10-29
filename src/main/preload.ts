@@ -21,11 +21,9 @@ const electronHandler = {
     },
   },
   store: {
-    // Sync call for getting data from the main process
     get(key: string) {
       return ipcRenderer.sendSync('electron-store-get', key);
     },
-    // Async call for setting data in the main process
     set(property: string, val: unknown) {
       ipcRenderer.send('electron-store-set', property, val);
     },

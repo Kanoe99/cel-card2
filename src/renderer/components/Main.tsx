@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Menu } from './ui/Menu';
 import { Header } from './ui/Header';
 import {
@@ -29,13 +29,13 @@ const Main = () => {
     () => window.electron.store.get('cards') || [],
   );
 
+  const stageRef = useRef(null);
+
   const cardText =
     isPickedCard &&
     cards.filter(
       (card: { key: string; value: string }) => card.key === isPickedCard,
     )[0].value;
-
-  console.log(imageSrc);
 
   return (
     <main className="h-screen overflow-auto">
@@ -43,7 +43,9 @@ const Main = () => {
         handleFileChange={(event) =>
           handleFileChange(event, setImageSrc, setFileName)
         }
-        handleSave={() => handleSave({ uri: imageSrc, fileName: fileName })}
+        handleSave={() =>
+          handleSave({ uri: imageSrc, fileName: fileName, stageRef: stageRef })
+        }
         handleDelete={() => handleDelete(setImageSrc)}
         handlePrint={handlePrint}
       />
@@ -64,7 +66,7 @@ const Main = () => {
             )
           }
         />
-        <Canvas cardText={cardText} imageSrc={imageSrc} />
+        <Canvas cardText={cardText} imageSrc={imageSrc} stageRef={stageRef} />
       </section>
     </main>
   );
