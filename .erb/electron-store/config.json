@@ -1,0 +1,13 @@
+{
+    "formats": [
+      { "key": "A4" },
+      { "key": "A5" },
+      { "key": "A6" }
+    ],
+    "cards": [
+      { "key": "card1", "value": "Happy Birthday!" },
+      { "key": "card2", "value": "Congratulations!" },
+      { "key": "card3", "value": "Thank You!" }
+    ]
+  }
+  

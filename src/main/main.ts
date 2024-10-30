@@ -14,7 +14,7 @@ interface StoreType {
 
 // Initialize electron-store with a custom directory for storage
 const store = new Store<StoreType>({
-  cwd: path.join(__dirname, 'electron-store'), // Store location
+  cwd: path.join(__dirname, '../electron-store'), // Store location
 });
 
 class AppUpdater {
